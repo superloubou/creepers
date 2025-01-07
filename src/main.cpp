@@ -51,15 +51,18 @@ int calculateScore(Grid &grid)
                 if (cell.cellType == 2) petalNeighbours += 1;
             }
 
-            if (currentCell.cellType == 1)
+            if (currentCell.cellType == 1 || currentCell.cellType == 2)
             {
                 score -= 1;
             }
 
             if (currentCell.cellType == 2)
-            {
-                score += 6;
-                score -= stemNeighbours * 2;
+            {   
+                if (stemNeighbours < 2) 
+                {
+                    score += 6;
+                }
+            
             }
         }
     }
