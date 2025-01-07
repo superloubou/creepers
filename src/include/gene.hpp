@@ -1,11 +1,11 @@
 #pragma once
 #include <array>
-#include <cstdint>
 
 struct Gene
 {
-    uint8_t id;
-    uint8_t up,down,left,right;
+    int id;
+    int cellType;
+    int up,down,left,right;
 
 };
 

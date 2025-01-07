@@ -22,7 +22,7 @@ class Renderer
             for (int c = 0; c < grid.numCols(); c++)
             {
                 cellDrawShape.setPosition(sf::Vector2f(r * 8, c * 8));
-                auto cell_value = grid.getAt(r, c).value;
+                auto cell_value = (grid.getAt(r, c)).cellType;
                 if (cell_value < 0 || cell_value > colorMap.size())
                 {
                     this->cellDrawShape.setFillColor(sf::Color(255, 0, 255));
@@ -41,6 +41,6 @@ class Renderer
 
 std::vector<sf::Color> Renderer::colorMap = {
     sf::Color(179, 229, 252), // air
-    sf::Color(128, 139, 150), // stone
-    sf::Color(46, 125, 50),  // creeper
+    sf::Color(67, 160, 71), // stem
+    sf::Color(255, 235, 59),  // petal
 };

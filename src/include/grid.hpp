@@ -2,41 +2,40 @@
 
 #include <cell.hpp>
 #include <SFML/Graphics.hpp>
+#include <gene.hpp>
 
 class Grid
 {
   private:
-    size_t rows, cols;
+    int rows, cols;
 
-    int index(size_t row, size_t col) const
-    {
-        if (row >= rows || col >= rows)
-        {
-            return -1;
-        }
-        return row * cols + col;
-    }
+    unsigned int index(int row, int col) const { return row * cols + col; }
 
     std::vector<Cell> data;
-    Cell invalidCell;
 
-  public:
-    Grid(size_t rows, size_t cols) : rows(rows), cols(cols), invalidCell(-1) { data.resize(rows * cols); }
-
-    Cell &getAt(size_t row, size_t col)
+    bool isValidCell(int row, int col) const
     {
-        auto indexToGet = index(row, col);
-        if (indexToGet < 0)
+        if (row >= rows || col >= cols || col < 0 || row < 0)
         {
-            return invalidCell;
+            return false;
         }
-        else
-        {
-            return data.at(indexToGet);
-        }
+        return true;
     }
 
-    std::vector<Cell> getNeighbors(size_t row, size_t col)
+  public:
+    Grid(int rows, int cols) : rows(rows), cols(cols) { data.resize(rows * cols); }
+
+    Cell& getAt(int row, int col)
+    {
+
+        if (isValidCell(row, col))
+        {
+            return data.at(index(row, col));
+        }
+        throw std::out_of_range("Cell coordinates out of range.");
+    }
+
+    std::vector<Cell> getNeighbors(int row, int col)
     {
         std::vector<Cell> neighbors;
 
@@ -44,18 +43,38 @@ class Grid
 
         for (const auto &dir : directions)
         {
-            size_t neighborRow = row + dir[0];
-            size_t neighborCol = col + dir[1];
+            int neighborRow = row + dir[0];
+            int neighborCol = col + dir[1];
 
-            if (neighborRow < rows && neighborCol < cols && neighborCol >= 0 && neighborRow >= 0)
+            if (isValidCell(row, col))
             {
-                neighbors.push_back(getAt(neighborRow, neighborCol));
+                Cell& neighbor = getAt(neighborRow, neighborCol);
+                neighbors.push_back(neighbor);
             }
         }
 
         return neighbors;
     }
 
-    size_t numRows() const { return rows; }
-    size_t numCols() const { return cols; }
+    auto getCardinalNeighbours(int row, int col) {}
+
+    int numRows() const { return rows; }
+    int numCols() const { return cols; }
+
+    void grow(Genome genome)
+    {
+        std::vector<Cell> newdata(this->data);
+        for (int r = 0; r < this->numRows(); r++)
+        {
+            for (int c = 0; c < this->numCols(); c++)
+            {
+                auto currentCell = this->getAt(r, c);
+                auto currentGene = genome.genes[currentCell.geneID];
+                auto upCell = this->getAt(r - 1, c);
+                auto downCell = this->getAt(r + 1, c);
+                auto leftCell = this->getAt(r, c - 1);
+                auto rightCell = this->getAt(r, c + 1);
+            }
+        }
+    }
 };

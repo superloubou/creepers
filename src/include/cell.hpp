@@ -3,7 +3,8 @@
 
 struct Cell
 {
-    int value;
-    Cell(int v = 0) : value(v) {}
+    int cellType;
+    int geneID = -1;
+    Cell(int cellType = 0) : cellType(cellType), geneID(-1) {}
 };
 
